@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Architecture | DashRocket ->]]></title>
+  <title><![CDATA[Category: Architecture | Freedom Dumlao]]></title>
   <link href="http://apiguy.github.io/blog/categories/architecture/atom.xml" rel="self"/>
   <link href="http://apiguy.github.io/"/>
-  <updated>2013-05-14T15:06:00-04:00</updated>
+  <updated>2013-05-14T15:25:53-04:00</updated>
   <id>http://apiguy.github.io/</id>
   <author>
     <name><![CDATA[Freedom Dumlao (@apiguy)]]></name>
-    
+    <email><![CDATA[freedomdumlao@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
