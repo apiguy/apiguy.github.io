@@ -4,7 +4,7 @@
   <title><![CDATA[DashRocket ->]]></title>
   <link href="http://apiguy.github.io/atom.xml" rel="self"/>
   <link href="http://apiguy.github.io/"/>
-  <updated>2013-05-14T14:23:17-04:00</updated>
+  <updated>2013-05-14T15:06:00-04:00</updated>
   <id>http://apiguy.github.io/</id>
   <author>
     <name><![CDATA[Freedom Dumlao (@apiguy)]]></name>
@@ -12,5 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Object Relational Madness]]></title>
+    <link href="http://apiguy.github.io/blog/2012/11/13/object-relational-madness/"/>
+    <updated>2012-11-13T14:27:00-05:00</updated>
+    <id>http://apiguy.github.io/blog/2012/11/13/object-relational-madness</id>
+    <content type="html"><![CDATA[<p>It seems so tempting, the allure of that instant gratification, the sweet smell of data persistence made simple. You start by browsing some blogs, maybe reading some Stack Overflow questions and before you know it, you&rsquo;ve become smitten with that one tool that is going to save your soul (and your time).</p>
+
+<p>Object Relational Mappers aren&rsquo;t a new phenomenon, and by george they are incredibly useful tools. But like most brilliant promises ORM frameworks come with a bitter dark side: You may not have to write your own queries but you better be sure you understand deeply how that framework works.</p>
+
+<blockquote><p>When will I learn?</p></blockquote>
+
+<p>In my years as a software developer, I&rsquo;ve used more than a few ORMs. From enterprisey configuration heavy systems like Hibernate and Entity Framework to the smaller agile ones like Rails’ ActiveRecord, Django&rsquo;s ORM and SQLAlchemy. I&rsquo;ve even used some of the NoSQL ones for my favorite document oriented database. It seems without fail that when I require even the most trivial of data persistence features I’m inclined to avoid going it alone and instead reach for a pre-baked off the shelf ORM framework and move on to the parts of my project that are more interesting to me.</p>
+
+<blockquote><p>And every time the same thing happens.</p></blockquote>
+
+<p>Eventually the system gets bigger, and the design goals of the ORM framework developer start to conflict with the objectives of my application. Every time.</p>
+
+<p>Let me show you what I mean. I’ll use psuedo-code here as not to taint the conversation about particulars of any specific ORM.</p>
+
+<pre><code>obj = Object.get_by_id(id)
+obj.view_count += 1
+obj.save()
+</code></pre>
+
+<p>Let’s look at that <code>save()</code> method invocation for a moment. The problem comes when you compare what you as a developer <em>thinks</em> is a reasonable way for the ORM framework to handle this task to what the framework designer thought was best for his or her particular needs. What I <em>thought</em> this line of code would do was:</p>
+
+<ol>
+<li>Find dirty attributes (like view_count)</li>
+<li>Build a query that updates that attribute in the persistent store</li>
+<li>Execute that query</li>
+</ol>
+
+
+<p>It turns out that what <code>save()</code> actually did was more along the lines of:</p>
+
+<ol>
+<li>Build a query to update every field in the persistent store with the current values of the object.</li>
+<li>Execute that query.</li>
+<li>Syncrhonously and recursively do an individual select on every single related entity, pulling the entire object graph into memory one object at a time.</li>
+<li>Synchonously and recursively persist each individual object in the graph, even though they have not been modified.</li>
+</ol>
+
+
+<p>It was quite a shock when I realized that simply incrementing the <code>view_count</code> attribute of the object led to an expensive and time consuming cascading update that frustrated, then later infurated me.</p>
+
+<p>It turns out the <em>right</em> way to do this would be to have just used an <code>update</code> method that was included with the ORM framework and all would have been well, but for some reason the fact that the ORM provided me the tools to make it behave reasonably didn’t do much to alevate my renewed distrust of ORM in general. The fact that I didnt anticipate that the save method would cascade over the entire object graph meant that there was either something wrong with me, or something wrong with the framework, and any of my friends will tell you I don’t easily assign blame to myself (even though that’s usually where it belongs). In the end though, I believe I came to the correct conclusion.</p>
+
+<blockquote><p>It’s not the (or any) ORM framework’s fault.</p></blockquote>
+
+<p>Inherently ORM frameworks are a general solution that solve the general problem of persistence management. And generally, they do this pretty well. The problems begin to show up later when the needs of an application become more specific. The tools will usually bend to serve those specific needs fairly well, but the ownus is on the developer to make sure they are well-educated in the ways of that particular framework so that they can use these specific-case features effectively.</p>
+
+<p>And therein lies the problem. You’ve saved yourself the time and energy of managing data access so that you can use that time and energy to manage your data access. While a good working knowlege of the persistent store is a requirement wether you use an ORM or not, a working knowlege of your ORM solution is only needed if you’re using one. By subtracting it from the picture your mental overhead is therefore decreased.</p>
+
+<blockquote><p>ORM is <em>not</em> the devil.</p></blockquote>
+
+<p>I’m sure it sounds like I’m villifying ORM frameworks and to be honest there is a part of me that certainly feels like it’s appropriate after the week I’ve had. But the truth is ORM frameworks make up a vital and important part of the development lifecycle for all kinds of apps from little web toys to monster enterprise applications. The key is knowing when and how to use them in your development, and most importantly what role they should play.</p>
+
+<blockquote><p>ORM Should be a Bridge, not the Foundation</p></blockquote>
+
+<p>I’m doing something here that I <em>hate</em>. I’m using metaphor to describe a technical term and I apologize. But let’s run through this excercise anyway.</p>
+
+<p>Treat ORM like a bridge. Use it to get your application off the ground, to get it running. ORM is a great tool because it makes it possible to get up and running faster and with less code. Bridges help us to cross the gap. But remember: When bridges can’t handle the traffic, they get replaced with something better. Make sure your bridge can be replaced when the time comes.</p>
+
+<p>Will I use ORM on my next application? If it requires persistence, most assuredly I will. But I’ll be mindful to keep an eye on what the framework does and correct any issues before they reveal themselves at some other inopportune moment.</p>
+]]></content>
+  </entry>
   
 </feed>

@@ -1,12 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://apiguy.github.io/blog/2012/11/13/object-relational-madness/</loc>
+        <lastmod>2013-05-14T15:05:54-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://apiguy.github.io/blog/archives/</loc>
-        <lastmod>2013-05-14T14:21:40-04:00</lastmod>
+        <lastmod>2013-05-14T15:05:54-04:00</lastmod>
     </url>
     <url>
         <loc>http://apiguy.github.io/</loc>
-        <lastmod>2013-05-14T14:21:40-04:00</lastmod>
+        <lastmod>2013-05-14T15:05:54-04:00</lastmod>
     </url>
     <url>
         <loc>http://apiguy.github.io/robots.txt</loc>
