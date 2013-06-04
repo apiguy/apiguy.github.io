@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: python | Freedom Dumlao]]></title>
+  <link href="http://apiguy.github.io/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://apiguy.github.io/"/>
+  <updated>2013-06-03T23:19:28-04:00</updated>
+  <id>http://apiguy.github.io/</id>
+  <author>
+    <name><![CDATA[Freedom Dumlao (@apiguy)]]></name>
+    <email><![CDATA[freedomdumlao@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Dark Side of Decorators]]></title>
+    <link href="http://apiguy.github.io/blog/2013/06/03/the-dark-side-of-decorators/"/>
+    <updated>2013-06-03T22:22:00-04:00</updated>
+    <id>http://apiguy.github.io/blog/2013/06/03/the-dark-side-of-decorators</id>
+    <content type="html"><![CDATA[<h2>The Dark Side of Decorators</h2>
+
+<p>Recently a <a href="https://github.com/apiguy/flask-classy/issues/23">bug report</a> was filed on the Flask-Classy issue tracker at Github which caught me by surprise. This was a bug so glaring that the fact I hadn&rsquo;t seen it myself was a shock, but even more shocking was that nobody else had reported it either.</p>
+
+<p>The bug was simple to describe:</p>
+
+<blockquote><p>If you used any decorator (but didn&rsquo;t use the <code>@route</code> decorator), Flask-Classy
+would not auto generate the correct route.</p></blockquote>
+
+<p>To be honest, when I realized the bug was related to decorators I wasn&rsquo;t <em>that</em> surprised. I&rsquo;d always known that there was something funky with them and I even hinted about that in the docs. As it&rsquo;s turned out though I haven&rsquo;t used decorators with FlaskViews that much and when I did I always had a <code>@route</code> decorator in the mix.</p>
+
+<p>Fortunately the issue submitter &ndash; <a href="https://github.com/shuhaowu">@shuhaowu</a> &ndash; was awesome enough to not only submit some failing tests, but also took the time to do some research into the problem It turns out that decorators obfuscate the signature of the method or functions they are applied to.</p>
+
+<p>This comes as absolutely no surprise, since decorators are essentially syntactic sugar for wrapping a function with another function. Somehow though the implications of this escaped me when I was writing earlier versions of Flask-Classy.</p>
+
+<p>To illustrate the effect this has on decorated methods, in a class take a look at this code snippet:</p>
+
+<p>``` python
+from inspect import getmembers, getargspec
+from functools import wraps</p>
+
+<h1>Some super basic decorators</h1>
+
+<p>def std_decorator(f):</p>
+
+<pre><code>def std_wrapper(*args, **kwargs):
+    return f(*args, **kwargs)
+return std_wrapper
+</code></pre>
+
+<p>def wraps_decorator(f):</p>
+
+<pre><code>@wraps(f)
+def wraps_wrapper(*args, **kwargs):
+    return f(*args, **kwargs)
+return wraps_wrapper
+</code></pre>
+
+<h1>A simple class with example decorators used</h1>
+
+<p>class SomeClass(object):</p>
+
+<pre><code>def method_one(self, x, y):
+    pass
+
+@std_decorator
+def method_two(self, x, y):
+    pass
+
+@wraps_decorator
+def method_three(self, x, y):
+    pass
+</code></pre>
+
+<p>obj = SomeClass()
+for name, func in getmembers(obj, predicate=inspect.ismethod):</p>
+
+<pre><code>print
+print "Bound Name: %s" % name
+print "Func Name: %s" % func.func_name
+print "Args: %s" % getargspec(func)[0] 
+</code></pre>
+
+<p>```</p>
+
+<p>Which outputs the following:</p>
+
+<pre><code>Bound Name: method_one
+Func Name: method_one
+Args: ['self', 'x', 'y']
+
+Bound Name: method_two
+Func Name: std_wrapper
+Args: []
+
+Bound Name: method_three
+Func Name: method_three
+Args: []
+</code></pre>
+
+<p>As we can see, the first method is totally transparent. The second method though has been totally
+obfuscated. We&rsquo;re only able to see the original method name because <code>inspect.getmembers</code> was kind
+enough to share the bound name. But the original arguments? Completely gone. The <code>functools.wraps</code>
+method at least keeps the original method name intact, but without the arguments we don&rsquo;t have enough information to construct a meaningful route that will map back to this method at runtime.</p>
+
+<p>So what&rsquo;s left? How can we get the argspec of the base method that&rsquo;s been decorated? Fortunately
+for us python&rsquo;s reflection capabilities are more than enough to get us there. Here&rsquo;s a function
+that can get the base method&rsquo;s argspec from <em>most</em> decorated methods. I&rsquo;m certain there must be a
+case where this will not work, but for all the cases I&rsquo;ve tried it works fine. (Remember, this <em>only</em> works for methods of a class, not plain functions.)</p>
+
+<p>``` python
+def get_true_argspec(method):</p>
+
+<pre><code>"""Drills through layers of decorators attempting to locate 
+   the actual argspec for the method.
+"""
+
+argspec = inspect.getargspec(method)
+args = argspec[0]
+if args and args[0] == 'self':
+    return argspec
+if hasattr(method, '__func__'):
+    method = method.__func__
+if not hasattr(method, 'func_closure') or method.func_closure is None:
+    raise Exception("No closure for method.")
+
+method = method.func_closure[0].cell_contents
+return get_true_argspec(method)
+</code></pre>
+
+<p>```</p>
+
+<p>Now, I haven&rsquo;t run any speed tests on this, but I presume by it&rsquo;s very nature that it&rsquo;s going to
+perform much slower than a typical <code>inspect.getargspec</code> (if for no other reason than the fact
+that it makes that exact call one or more times). Fortunately in the case of Flask-Classy, the
+price is only paid during application loading and won&rsquo;t have any impact on an actively running
+application.</p>
+]]></content>
+  </entry>
+  
+</feed>
