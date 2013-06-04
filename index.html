@@ -7,7 +7,8 @@
 	<meta name="author" content="Freedom Dumlao (@apiguy)">
 
 	
-	<meta name="description" content="Jun 3rd, 2013 python Comments The Dark Side of Decorators Recently a bug report was filed on the Flask-Classy issue tracker at Github which caught &hellip;">
+	<meta name="description" content="Jun 3rd, 2013 python Comments The Dark Side of Decorators Recently a bug report was filed on the Flask-Classy
+issue tracker at Github which caught &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -106,20 +107,29 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2013/06/03/the-dark-side-of-decorators/" itemprop="url">The Dark Side of Decorators</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<p>Recently a <a href="https://github.com/apiguy/flask-classy/issues/23">bug report</a> was filed on the Flask-Classy issue tracker at Github which caught me by surprise. This was a bug so glaring that the fact I hadn&rsquo;t seen it myself was a shock, but even more shocking was that nobody else had reported it either.</p>
+		<p>Recently a <a href="https://github.com/apiguy/flask-classy/issues/23">bug report</a> was filed on the Flask-Classy
+issue tracker at Github which caught me by surprise. This was a bug so glaring that the fact I hadn&rsquo;t
+seen it myself was a shock, but even more shocking was that nobody else had reported it either.</p>
 
 <p>The bug was simple to describe:</p>
 
 <blockquote><p>If you used any decorator (but didn&rsquo;t use the <code>@route</code> decorator), Flask-Classy
 would not auto generate the correct route.</p></blockquote>
 
-<p>To be honest, when I realized the bug was related to decorators I wasn&rsquo;t <em>that</em> surprised. I&rsquo;d always known that there was something funky with them and I even hinted about that in the docs. As it&rsquo;s turned out though I haven&rsquo;t used decorators with FlaskViews that much and when I did I always had a <code>@route</code> decorator in the mix.</p>
+<p>To be honest, when I realized the bug was related to decorators I wasn&rsquo;t <em>that</em> surprised. I&rsquo;d always
+known that there was something funky with them and I even hinted about that in the docs. As it&rsquo;s turned
+out though I haven&rsquo;t used decorators with FlaskViews that much and when I did I always had a <code>@route</code>
+decorator in the mix.</p>
 
-<p>Fortunately the issue submitter &ndash; <a href="https://github.com/shuhaowu">@shuhaowu</a> &ndash; was awesome enough to not only submit some failing tests, but also took the time to do some research into the problem It turns out that decorators obfuscate the signature of the method or functions they are applied to.</p>
+<p>Fortunately the issue submitter &ndash; <a href="https://github.com/shuhaowu">@shuhaowu</a> &ndash; was awesome enough to not
+only submit some failing tests, but also took the time to do some research into the problem It turns
+out that decorators obfuscate the signature of the method or functions they are applied to.</p>
 
-<p>This comes as absolutely no surprise, since decorators are essentially syntactic sugar for wrapping a function with another function. Somehow though the implications of this escaped me when I was writing earlier versions of Flask-Classy.</p>
+<p>This comes as absolutely no surprise, since decorators are essentially syntactic sugar for wrapping a
+function with another function. Somehow though the implications of this escaped me when I was writing
+earlier versions of Flask-Classy.</p>
 
-<p>To illustrate the effect this has on decorated methods, in a class take a look at this code snippet:</p>
+<p>To illustrate the effect this has on decorated methods in a class take a look at this code snippet:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -209,15 +219,17 @@ Func Name: method_three
 Args: []
 </code></pre>
 
-<p>As we can see, the first method is totally transparent. The second method though has been totally
+<p>As we can see, the first method is totally transparent. The second method though has been completely
 obfuscated. We&rsquo;re only able to see the original method name because <code>inspect.getmembers</code> was kind
 enough to share the bound name. But the original arguments? Completely gone. The <code>functools.wraps</code>
-method at least keeps the original method name intact, but without the arguments we don&rsquo;t have enough information to construct a meaningful route that will map back to this method at runtime.</p>
+method at least keeps the original method name intact, but without the arguments we don&rsquo;t have enough
+information to construct a meaningful route that will map back to this method at runtime.</p>
 
 <p>So what&rsquo;s left? How can we get the argspec of the base method that&rsquo;s been decorated? Fortunately
 for us python&rsquo;s reflection capabilities are more than enough to get us there. Here&rsquo;s a function
 that can get the base method&rsquo;s argspec from <em>most</em> decorated methods. I&rsquo;m certain there must be a
-case where this will not work, but for all the cases I&rsquo;ve tried it works fine. (Remember, this <em>only</em> works for methods of a class, not plain functions.)</p>
+case where this will not work, but for all the cases I&rsquo;ve tried it works fine.
+(Remember, this <em>only</em> works for methods of a class, not plain functions.)</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
