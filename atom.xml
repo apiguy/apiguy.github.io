@@ -4,7 +4,7 @@
   <title><![CDATA[Freedom Dumlao]]></title>
   <link href="http://apiguy.github.io/atom.xml" rel="self"/>
   <link href="http://apiguy.github.io/"/>
-  <updated>2013-06-03T23:19:28-04:00</updated>
+  <updated>2013-06-03T23:20:50-04:00</updated>
   <id>http://apiguy.github.io/</id>
   <author>
     <name><![CDATA[Freedom Dumlao (@apiguy)]]></name>
@@ -18,9 +18,7 @@
     <link href="http://apiguy.github.io/blog/2013/06/03/the-dark-side-of-decorators/"/>
     <updated>2013-06-03T22:22:00-04:00</updated>
     <id>http://apiguy.github.io/blog/2013/06/03/the-dark-side-of-decorators</id>
-    <content type="html"><![CDATA[<h2>The Dark Side of Decorators</h2>
-
-<p>Recently a <a href="https://github.com/apiguy/flask-classy/issues/23">bug report</a> was filed on the Flask-Classy issue tracker at Github which caught me by surprise. This was a bug so glaring that the fact I hadn&rsquo;t seen it myself was a shock, but even more shocking was that nobody else had reported it either.</p>
+    <content type="html"><![CDATA[<p>Recently a <a href="https://github.com/apiguy/flask-classy/issues/23">bug report</a> was filed on the Flask-Classy issue tracker at Github which caught me by surprise. This was a bug so glaring that the fact I hadn&rsquo;t seen it myself was a shock, but even more shocking was that nobody else had reported it either.</p>
 
 <p>The bug was simple to describe:</p>
 
