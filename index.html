@@ -7,8 +7,7 @@
 	<meta name="author" content="Freedom Dumlao (@apiguy)">
 
 	
-	<meta name="description" content="Jun 3rd, 2013 python Comments The Dark Side of Decorators Recently a bug report was filed on the Flask-Classy
-issue tracker at Github which caught &hellip;">
+	<meta name="description" content="Jun 6th, 2013 flask,, flask-classy, python, Comments Flask-Classy 0.6 Released A long overdue update for Flask-Classy has been released today. You &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +76,81 @@ issue tracker at Github which caught &hellip;">
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-06T11:13:00-04:00" data-updated="true" itemprop="datePublished">Jun 6<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/flask/'>flask,</a>, <a class='category' href='/blog/categories/flask-classy/'>flask-classy</a>, <a class='category' href='/blog/categories/python/'>python,</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/06/06/flask-classy-0-dot-6-released/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/06/06/flask-classy-0-dot-6-released/" itemprop="url">Flask-Classy 0.6 Released</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>A long overdue update for Flask-Classy has been released today. You can check out the
+<a href="http://pythonhosted.org/Flask-Classy/">updated docs here</a> and find the
+<a href="http://github.com/apiguy/flask-classy">Github repo here</a>.</p>
+
+<ul>
+<li><p><strong>Breaking Changes</strong></p>
+
+<ul>
+<li>Classmethods are filtered out when determining which methods
+should be routeable.</li>
+</ul>
+</li>
+<li><p>Features</p>
+
+<ul>
+<li>FlaskViews now support a &ldquo;decorators&rdquo; attribute which takes a list
+of decorators to apply to every method in that view.</li>
+<li>The route_base now supports arguments.</li>
+</ul>
+</li>
+<li><p>Bugfixes</p>
+
+<ul>
+<li>Fixed a bug that prevented Flask-Classy from generating routes for
+methods that had used a decorator but did not also use the @route
+decorator.</li>
+<li>view_args dict modifications made before the FlaskView view is called
+are now available in the FlaskView.</li>
+</ul>
+</li>
+<li><p>Thanks:</p>
+
+<ul>
+<li>Thanks to Max Countryman, Julien Rebetez, Philip Schleihauf, and Shuhao Wu for your
+contributions to this release!</li>
+</ul>
+</li>
+</ul>
+
+
+		
+		
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">

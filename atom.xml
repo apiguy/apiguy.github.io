@@ -4,7 +4,7 @@
   <title><![CDATA[Freedom Dumlao]]></title>
   <link href="http://apiguy.github.io/atom.xml" rel="self"/>
   <link href="http://apiguy.github.io/"/>
-  <updated>2013-06-04T08:24:49-04:00</updated>
+  <updated>2013-06-06T11:29:57-04:00</updated>
   <id>http://apiguy.github.io/</id>
   <author>
     <name><![CDATA[Freedom Dumlao (@apiguy)]]></name>
@@ -12,6 +12,53 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Flask-Classy 0.6 Released]]></title>
+    <link href="http://apiguy.github.io/blog/2013/06/06/flask-classy-0-dot-6-released/"/>
+    <updated>2013-06-06T11:13:00-04:00</updated>
+    <id>http://apiguy.github.io/blog/2013/06/06/flask-classy-0-dot-6-released</id>
+    <content type="html"><![CDATA[<p>A long overdue update for Flask-Classy has been released today. You can check out the
+<a href="http://pythonhosted.org/Flask-Classy/">updated docs here</a> and find the
+<a href="http://github.com/apiguy/flask-classy">Github repo here</a>.</p>
+
+<ul>
+<li><p><strong>Breaking Changes</strong></p>
+
+<ul>
+<li>Classmethods are filtered out when determining which methods
+should be routeable.</li>
+</ul>
+</li>
+<li><p>Features</p>
+
+<ul>
+<li>FlaskViews now support a &ldquo;decorators&rdquo; attribute which takes a list
+of decorators to apply to every method in that view.</li>
+<li>The route_base now supports arguments.</li>
+</ul>
+</li>
+<li><p>Bugfixes</p>
+
+<ul>
+<li>Fixed a bug that prevented Flask-Classy from generating routes for
+methods that had used a decorator but did not also use the @route
+decorator.</li>
+<li>view_args dict modifications made before the FlaskView view is called
+are now available in the FlaskView.</li>
+</ul>
+</li>
+<li><p>Thanks:</p>
+
+<ul>
+<li>Thanks to Max Countryman, Julien Rebetez, Philip Schleihauf, and Shuhao Wu for your
+contributions to this release!</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Dark Side of Decorators]]></title>
